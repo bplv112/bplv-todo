@@ -1,0 +1,9 @@
+h1 {
+  margin-bottom: 3rem !important;
+}
+
+@media (max-width: 992px) {
+  .toast {
+    margin: 20px auto;
+  }
+}
