@@ -9,6 +9,7 @@ import Tasks from '../components/Tasks/Tasks';
 import Todo from '../components/Todo/Todo';
 import Notice from '../components/Notice/Notice';
 import {getCurrentDate} from '../utils/Utils';
+import {getTempId} from '../utils/Utils';
 import Loader from '../components/Loader/Loader';
 
 // Import the db handler.
@@ -19,87 +20,110 @@ import './App.css';
 class App extends Component {
 
 	state = {
-	  tasks:null,
-	  tempTasks:{},
+	  tasks:[],
+	  tempTasks:{time: '', task: '', done: ''},
 	  alert:{variant:'',message:''},
 	  showAlert:false,
 	  setShowAlert:false,
 	  loading:true,
-	}
-
-	// Get data.
-	componentDidMount () {
-		DB.get('/todo-tasks.json')
-		.then(response => {
-			this.setState({tasks: response.data, loading:false});
-		})
-		.catch(error=>console.log(error));
-
+	  dataCount:0,
 	}
 
 	// handler for deleting todo.
-	deleteHandler = (index) => {
-		const tasks =[...this.state.tasks];
-		tasks.splice( index, 1 );
-		this.setState({tasks:tasks});
-		console.log( this.state, index );
+	deleteHandler = (index,todo) => {
+		const tasks = this.state.tasks;
+		delete tasks[0][index];
+		this.deleteDBHandler( index, tasks );
 	}
 
 	// handler for marking the todo as done.
 	doneHandler = (event, id) => {
-		const taskIndex = this.state.tasks.findIndex( p =>{
-			return p.id === id;
-		});
+		if ( ! ( id in this.state.tasks[0] ) ) {
+			return id;
+		}
 
-		const task = {
-		...this.state.tasks[taskIndex]
-		};
+		const task   = this.state.tasks[0][id],
+		 	  tasks  = this.state.tasks;
+		task.done    = event.target.checked;
+		tasks[0][id] = task;
 
-		task.done = event.target.checked;
-		const tasks = [ ...this.state.tasks];
-		tasks[taskIndex] = task;
-		this.setState({tasks:tasks});
+		this.editDBHandler( task, id, tasks );
 	}
 
 	// handler for input.
 	taskChangeHandler = (event) => {
 		let date = getCurrentDate('/');
 		this.setState({
-			tempTasks:{time: date, task: event.target.value,  done: false, id: 223}
+			tempTasks:{time: date, task: event.target.value, done: false}
 		});
 	}
 
 	// Handler for tasks.
 	addTaskHandler = () => {
 		if( 0 !== Object.keys(this.state.tempTasks).length ) {
-			const state = {
+			let state = {
 				...this.state
 			}
 
 			// check empty values at the start.
-			if( ! state.tasks ) {
-				state.tasks = [{ ...this.state.tempTasks }];
+			if( ! state.tasks[0] ) {
+				state.tasks[0] = {};
+				state.tasks[0][getTempId()] ={ ...state.tempTasks }
 			} else {
-				state.tasks.push( this.state.tempTasks );
+				const tempTasks = { ...state.tempTasks };
+				state.tasks[0][getTempId()] = tempTasks;
 			}
 
-			this.setState({tasks:state.tasks, tempTasks:'', alert:{variant:'success', message: 'Task Added'}, showAlert:true, setShowAlert: true});
-			this.updateDBHandler();
+			this.updateDBHandler( state );
+			this.setState({tasks:state.tasks, tempTasks:{time: '', task: '', done: ''}, alert:{variant:'success', message: 'Task Added'}, showAlert:true, setShowAlert: true});
+
 		} else {
 			this.setState({alert:{variant:'danger', message: 'Nothing to add'}, showAlert:true, setShowAlert: true});
 		}
 	}
 
 	// Database update
-	updateDBHandler = () => {
-		let data = {
-			...this.state.tasks
-		}
-		console.log( data );
-		DB.post('/todo-bplv.json', data)
-		.then(response => console.log(response))
+	updateDBHandler = ( data ) => {
+		DB.post('/todo-bplv.json', data.tempTasks)
+		.then(response => {
+		})
+		.catch(error=>{
+		});
+	}
+
+	editDBHandler = ( data, id, tasks ) => {
+		DB.put('/todo-bplv/' + id.toString() + '/.json', data)
+		.then(response => {
+			this.setState({tasks:tasks});
+		})
+		.catch(error=>{
+		});
+	}
+	// Database delete
+	deleteDBHandler = ( data, tasks ) => {
+		DB.delete('/todo-bplv/' + data.toString() + '.json')
+		.then(response => {
+			this.setState({tasks:tasks});
+		})
+		.catch(error=>{
+		});
+	}
+
+	// Get data.
+	componentDidMount () {
+		this.getDataFromRemote();
+	}
+
+
+	//Data handler.
+	getDataFromRemote() {
+		DB.get('/todo-bplv.json')
+		.then(response => {
+			this.setState({tasks: [response.data], loading:false});
+		})
 		.catch(error=>console.log(error));
 	}
+
 
 	render() {
 		if( this.state.loading ) {
@@ -107,7 +131,6 @@ class App extends Component {
 				<Loader/>
 			);
 		} else {
-			console.log( this.state.tasks );
 			return (
 				<Container className="p-3">
 					<Jumbotron>
@@ -116,6 +139,7 @@ class App extends Component {
 						<Todo
 							tempTask={this.taskChangeHandler}
 							addTask={this.addTaskHandler}
+							taskVal={this.state.tempTasks.task}
 						/>
 
 						<Notice variant={this.state.alert.variant} message={this.state.alert.message}/>
