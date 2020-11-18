@@ -1,0 +1,7 @@
+.alert.show {
+    width: 20%;
+    position: absolute;
+    top: 0;
+    left: 40%;
+    right: 50%;
+}

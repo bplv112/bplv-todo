@@ -8,7 +8,7 @@ const tasks = (props) => props.tasks.map( (task, index ) => {
 		done={task.done}
 		id={task.id}
 		cardTitle={ true=== task.done ? 'Done' : 'Todo'}
-		onClose={()=> props.deleted(index)}
+		onClose={() => props.deleted(index)}
 		completed={(event) => props.done(event, task.id)}
 		key={task.id.toString()}
 	/>

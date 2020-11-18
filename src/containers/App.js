@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
+
+// Import bootstrap components
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Container from 'react-bootstrap/Container';
+
+// Import custom components.
 import Tasks from '../components/Tasks/Tasks';
 import Todo from '../components/Todo/Todo';
+import Notice from '../components/Notice/Notice';
+import {getCurrentDate} from '../utils/Utils';
+
 import './App.css';
 
 class App extends Component {
@@ -14,7 +21,11 @@ class App extends Component {
 	   {time: '12/2020', task: 'bplv', done: false, id: 3},
 	   {time: '13/2020', task: 'hey',  done: false, id:7}
 
-	  ]
+	  ],
+	  tempTasks:{},
+	  alert:{variant:'',message:''},
+	  showAlert:false,
+	  setShowAlert:false,
 	}
 
 	// handler for deleting todo.
@@ -31,17 +42,35 @@ class App extends Component {
 			return p.id === id;
 		});
 
-		const task ={
+		const task = {
 		...this.state.tasks[taskIndex]
 		};
 
 		task.done = event.target.checked;
-		console.log( task.done );
 		const tasks = [ ...this.state.tasks];
 		tasks[taskIndex] = task;
 		this.setState({tasks:tasks});
-		console.log( this.state );
+	}
 
+	// handler for input.
+	taskChangeHandler = (event) => {
+		let date = getCurrentDate('/');
+		this.setState({
+			tempTasks:{time: date, task: event.target.value,  done: false, id: 223}
+		});
+	}
+
+	// Handler for tasks.
+	addTaskHandler = () => {
+		if( 0 !== Object.keys(this.state.tempTasks).length ) {
+			const state = {
+				...this.state
+			}
+			state.tasks.push( this.state.tempTasks );
+			this.setState({tasks:state.tasks, tempTasks:'', alert:{variant:'success', message: 'Task Added'}, showAlert:true, setShowAlert: true});
+		} else {
+			this.setState({alert:{variant:'danger', message: 'Nothing to add'}, showAlert:true, setShowAlert: true});
+		}
 
 	}
 
@@ -50,7 +79,14 @@ class App extends Component {
 		<Container className="p-3">
 		  <Jumbotron>
 			<h1 className="header d-flex justify-content-center">Your Todo-list</h1>
-			<Todo></Todo>
+			<Todo
+				tempTask={this.taskChangeHandler}
+				addTask={this.addTaskHandler}
+			></Todo>
+
+			<Notice variant={this.state.alert.variant} message={this.state.alert.message}>
+		 	</Notice>
+
 			<Tasks
 				tasks={this.state.tasks}
 				deleted={this.deleteHandler}
