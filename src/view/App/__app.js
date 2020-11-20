@@ -5,23 +5,21 @@ import Jumbotron from 'react-bootstrap/Jumbotron';
 import Container from 'react-bootstrap/Container';
 
 // Import custom components.
-import Tasks from '../components/Tasks/Tasks';
-import Todo from '../components/Todo/Todo';
-import Notice from '../components/Notice/Notice';
-import {getCurrentDate} from '../utils/Utils';
-import {getTempId} from '../utils/Utils';
-import Loader from '../components/Loader/Loader';
+import Tasks from '../../components/Tasks/Tasks';
+import Todo from '../../components/Todo/Todo';
+import Notice from '../../components/Notice/Notice';
+import {getCurrentDate} from '../../utils/Utils';
+import {getTempId} from '../../utils/Utils';
+import Loader from '../../components/Loader/Loader';
 
 // Import the db handler.
-import DB from '../todo-axios';
+import DB from '../../todo-axios';
 
 import './App.css';
 
 class App extends Component {
 
 	state = {
-	  tasks:[],
-	  tempTasks:{time: '', task: '', done: ''},
 	  alert:{variant:'',message:''},
 	  showAlert:false,
 	  setShowAlert:false,
@@ -114,7 +112,6 @@ class App extends Component {
 		this.getDataFromRemote();
 	}
 
-
 	//Data handler.
 	getDataFromRemote() {
 		DB.get('/todo-bplv.json')
@@ -123,7 +120,6 @@ class App extends Component {
 		})
 		.catch(error=>console.log(error));
 	}
-
 
 	render() {
 		if( this.state.loading ) {

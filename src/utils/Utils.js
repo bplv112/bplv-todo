@@ -1,3 +1,6 @@
+// Import the db handler.
+import DB from '../todo-axios';
+
 export function getCurrentDate(separator=''){
 	let newDate = new Date()
 	let date = newDate.getDate();
@@ -15,4 +18,31 @@ export function getTempId(length=7) {
 	   result += characters.charAt(Math.floor(Math.random() * charactersLength));
 	}
 	return result;
- }
+}
+
+//Data handler.
+export function getDataFromRemote() {
+	const response = DB.get('/todo-bplv.json').then(result => { return result.data});
+	return response;
+}
+
+export async function fetchTodoData() {
+	let rawTodos = await getDataFromRemote(),
+		todo     = {};
+
+	if( ! rawTodos ) {
+		return;
+	}
+
+	//get data.
+	todo = rawTodos ? Object.entries(rawTodos).map(([id,todo])=>{
+		return {
+			id: id,
+			done: todo.done,
+			task: todo.task,
+			time: todo.time,
+		}
+	}) : '';
+
+	return todo;
+}
