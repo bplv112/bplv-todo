@@ -9,7 +9,7 @@ const Task = (props) => {
 	  <Toast show={show} onClose={() => { props.onClose();} }>
 		<Toast.Header>
 			<input type="checkbox" onChange={props.completed} checked={props.done} value="1"/>
-			<strong className="mr-auto">{props.cardTitle}</strong>
+			<strong className="mr-auto">{ !props.done ? 'Todo' : 'Done'}</strong>
 			<small>{props.time}</small>
 		</Toast.Header>
 		<Toast.Body>{props.name}</Toast.Body>
