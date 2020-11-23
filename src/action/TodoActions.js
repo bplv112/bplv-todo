@@ -1,32 +1,38 @@
 import TodoActionTypes from './TodoActionTypes';
 import TodoDispatcher from '../dispatcher/TodoDispatcher';
-import {fetchTodoData} from '../utils/Utils';
 
 const TodoActions = {
-  addTodo(text) {
+  addTodo: text => {
     TodoDispatcher.dispatch({
       type: TodoActionTypes.ADD_TODO,
       text,
     });
   },
 
-  deleteTodo(id) {
+  deleteTodo: id => {
     TodoDispatcher.dispatch({
       type: TodoActionTypes.DELETE_TODO,
       id,
     });
   },
 
-  toggleTodo(id) {
+  toggleTodo: id => {
     TodoDispatcher.dispatch({
       type: TodoActionTypes.TOGGLE_TODO,
       id,
     });
   },
-  todoFetchDatabase(data) {
+
+  todoFetchDatabase: () => {
     TodoDispatcher.dispatch({
-      type: TodoActionTypes.TODO_FETCH_DATABASE,
-      data: data,
+      type: TodoActionTypes.TODO_FETCH_DATABASE
+    });
+  },
+
+  updateDraft(text) {
+    TodoDispatcher.dispatch({
+      type: TodoActionTypes.UPDATE_DRAFT,
+      text,
     });
   },
 

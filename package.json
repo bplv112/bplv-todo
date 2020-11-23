@@ -39,6 +39,7 @@
     ]
   },
   "devDependencies": {
-    "react-bootstrap": "^1.4.0"
+    "react-bootstrap": "^1.4.0",
+    "regenerator-runtime": "^0.13.7"
   }
 }

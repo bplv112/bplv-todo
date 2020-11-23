@@ -1,5 +1,6 @@
 // Import the db handler.
 import DB from '../todo-axios';
+import Todos from '../containers/Todo/Todos';
 
 export function getCurrentDate(separator=''){
 	let newDate = new Date()
@@ -28,21 +29,23 @@ export function getDataFromRemote() {
 
 export async function fetchTodoData() {
 	let rawTodos = await getDataFromRemote(),
-		todo     = {};
+		tasks    = {};
 
 	if( ! rawTodos ) {
 		return;
 	}
 
 	//get data.
-	todo = rawTodos ? Object.entries(rawTodos).map(([id,todo])=>{
-		return {
-			id: id,
-			done: todo.done,
-			task: todo.task,
-			time: todo.time,
-		}
-	}) : '';
+	if( rawTodos ) {
+		Object.entries( rawTodos ).map( ( [id,todo] ) => {
+			return tasks[id] = new Todos({
+				id:id,
+				task: todo.task,
+				done: todo.done,
+				time: todo.time
+			});
+		})
+	}
 
-	return todo;
+	return tasks;
 }

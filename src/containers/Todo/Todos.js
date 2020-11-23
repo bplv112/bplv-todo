@@ -1,10 +1,10 @@
 import Immutable from 'immutable';
 
-const Todo = Immutable.Record({
+const Todos = Immutable.Record({
   id: '',
-  done: false,
   task: '',
+  done: false,
   time: '',
 });
 
-export default Todo;
+export default Todos;

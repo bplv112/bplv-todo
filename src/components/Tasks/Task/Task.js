@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Toast from 'react-bootstrap/Toast';
 import './Task.css';
 
 const Task = (props) => {
-	const [show] = useState(true);
-
+	console.log( props.done );
 	return (
-	  <Toast show={show} onClose={() => { props.onClose();} }>
+	  <Toast onClose={props.delete}>
 		<Toast.Header>
-			<input type="checkbox" onChange={props.completed} checked={props.done} value="1"/>
+			<input type="checkbox" taskid={props.taskid} onChange={props.completed} checked={props.done} value="1"/>
 			<strong className="mr-auto">{ !props.done ? 'Todo' : 'Done'}</strong>
 			<small>{props.time}</small>
 		</Toast.Header>
