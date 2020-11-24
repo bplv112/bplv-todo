@@ -10,57 +10,56 @@ class AppMain extends Component {
 
 	// handler for marking the todo as done.
 	doneHandler = event => {
-    const id = event.target.getAttribute( 'taskid' );
-    this.props.todoProps.onToggleTodo( id );
-  }
+		const id = event.target.getAttribute( 'taskid' );
+		this.props.todoProps.onToggleTodo( id );
+	}
 
-  	// handler for deleting todo.
-  deleteHandler = id => {
-    this.props.todoProps.onDelete( id );
-  }
+	// handler for deleting todo.
+	deleteHandler = id => {
+		this.props.todoProps.onDelete( id );
+	}
 
-  addTodoHandler = () => {
-    this.props.todoProps.onAdd( this.props.todoProps.draft );
-  }
+	// handler for adding todo.
+	addTodoHandler = () => {
+		this.props.todoProps.onAdd( this.props.todoProps.draft );
+	}
 
-  updateDraftHandler = event => {
-    this.props.todoProps.onUpdateDraft( event.target.value );
-  }
+	// handler for updating todo draft.
+	updateDraftHandler = event => {
+		this.props.todoProps.onUpdateDraft( event.target.value );
+	}
 
-  render() {
-    return (
-      <Container className="p-3">
-					<Jumbotron>
-						<h1 className="header d-flex justify-content-center">Your Todo-list</h1>
+	render() {
+		return (
+			<Container className="p-3">
+				<Jumbotron>
+					<h1 className="header d-flex justify-content-center">Your Todo-list</h1>
+					<Todo
+					addTask={this.addTodoHandler}
+					onChange={this.updateDraftHandler}
+					value={this.props.todoProps.draft}
+					/>
 
-						<Todo
-							addTask={this.addTodoHandler}
-              onChange={this.updateDraftHandler}
-              value={this.props.todoProps.draft}
+					{[ ...this.props.todoProps.todos.values() ].reverse().map( todo => (
+						<Task
+						name={todo.task}
+						time={todo.time}
+						done={todo.done}
+						taskid={todo.id}
+						key={todo.id}
+						completed={this.doneHandler}
+						delete={ () => this.deleteHandler(todo.id) }
 						/>
+					))}
 
-            {[ ...this.props.todoProps.todos.values() ].reverse().map(todo => (
-              <Task
-                name={todo.task}
-                time={todo.time}
-                done={todo.done}
-                taskid={todo.id}
-                key={todo.id}
-                completed={this.doneHandler}
-                delete={ () => this.deleteHandler(todo.id) }
-              />
-            ))}
-
-					</Jumbotron>
+				</Jumbotron>
 			</Container>
-    );
-  }
-
+		);
+	}
 }
 
 function App(props) {
-  return <AppMain todoProps={props} />
+	return <AppMain todoProps={props} />
 }
-
 
 export default App;

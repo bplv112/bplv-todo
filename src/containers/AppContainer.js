@@ -6,22 +6,22 @@ import TodoDraftStore from '../store/TodoDraftStore';
 
 
 function getStores() {
-  return [
-    TodoStore,
-    TodoDraftStore
-  ];
+	return [
+		TodoDraftStore,
+		TodoStore,
+	];
 }
 
 function getState() {
-  return {
-    todos: TodoStore.getState(),
-    draft: TodoDraftStore.getState(),
-    onAdd: TodoActions.addTodo,
-    onToggleTodo: TodoActions.toggleTodo,
-    onUpdateDraft: TodoActions.updateDraft,
-	  onFetchDatabase: TodoActions.todoFetchDatabase,
-	  onDelete: TodoActions.deleteTodo,
-  };
+	return {
+		todos: TodoStore.getState(),
+		draft: TodoDraftStore.getState(),
+		onAdd: TodoActions.addTodo,
+		onToggleTodo: TodoActions.toggleTodo,
+		onUpdateDraft: TodoActions.updateDraft,
+		onFetchDatabase: TodoActions.todoFetchDatabase,
+		onDelete: TodoActions.deleteTodo
+	};
 }
 
 export default Container.createFunctional( AppView, getStores, getState);

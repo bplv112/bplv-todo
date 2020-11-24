@@ -5,20 +5,20 @@ import Immutable from 'immutable';
 
 class TodoStore extends ReduceStore {
 
-  constructor() {
-    super(TodoDispatcher);
-  }
-
-  getInitialState() {
-	return Immutable.OrderedMap();
-  }
-
-  reduce( state, action ) {
-	if( StoreFunctions[action.type] ) {
-		return StoreFunctions[action.type]( state, action );
+	constructor() {
+		super(TodoDispatcher);
 	}
-	return state;
-  }
+
+	getInitialState() {
+		return Immutable.OrderedMap();
+	}
+
+	reduce( state, action ) {
+		if( StoreFunctions[action.type] ) {
+			return StoreFunctions[action.type]( state, action );
+		}
+		return state;
+	}
 }
 
 export default new TodoStore();

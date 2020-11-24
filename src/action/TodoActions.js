@@ -29,7 +29,7 @@ const TodoActions = {
     });
   },
 
-  updateDraft(text) {
+  updateDraft: text => {
     TodoDispatcher.dispatch({
       type: TodoActionTypes.UPDATE_DRAFT,
       text,

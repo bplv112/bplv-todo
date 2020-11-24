@@ -11,20 +11,19 @@ const StoreFunctions = {
 	[TodoActionTypes.ADD_TODO]: ( state, action ) => {
 
 		// Don't add todos with no text.
-        if (!action.text) {
+		if (!action.text) {
 			return state;
 		}
 
-		  // Get a temporay ID, new ID will be set on firebase.
-		  const id = getTempId(),
-			  date = getCurrentDate('/');
-		  return state.set(id, new Todos({
-				id,
-				task: action.text,
-			  done: false,
-				time: date
-		  }));
-
+		// Get a temporay ID, new ID will be set on firebase.
+		const id = getTempId(),
+		date = getCurrentDate('/');
+		return state.set(id, new Todos({
+			id,
+			task: action.text,
+			done: false,
+			time: date
+		}));
 	},
 
 	[TodoActionTypes.DELETE_TODO]: ( state, action ) => {
@@ -35,7 +34,7 @@ const StoreFunctions = {
 		return state.update(
 			action.id,
 			todo => todo.set('done', !todo.done),
-		  );
+		);
 	},
 
 	[TodoActionTypes.TODO_FETCH_DATABASE]: ( state, action ) => {
@@ -52,6 +51,6 @@ const StoreFunctions = {
 	[TodoActionTypes.TODO_RECEIVE_DATABASE]: ( state, action ) => {
 		return state.merge( action.data );
 	},
-
 }
+
 export default StoreFunctions;
